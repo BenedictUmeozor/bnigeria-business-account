@@ -16,7 +16,7 @@ const AppHeader = () => {
           />
         </div>
       </div>
-      <Space size={'large'}>
+      <div className="flex items-center gap-4">
         <Button
           icon={
             <Badge count={2} color={Colors.primary}>
@@ -28,13 +28,17 @@ const AppHeader = () => {
           type="text"
         />
         <Space align="center">
-          <Avatar src="/images/avatar.png" size={'large'} className='cursor-pointer' />
+          <Avatar
+            src="/images/avatar.png"
+            size={'large'}
+            className="cursor-pointer"
+          />
           <div className="flex flex-col items-start gap-0.5">
             <h5 className="text-sm font-medium">Michelle Mezie</h5>
-            <p className="text-grey-500 text-sm">michelle.dsgn@gmail.com</p>
+            <p className="text-sm text-grey-500">michelle.dsgn@gmail.com</p>
           </div>
         </Space>
-      </Space>
+      </div>
     </header>
   );
 };

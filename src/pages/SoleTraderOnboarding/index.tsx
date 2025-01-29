@@ -1,13 +1,11 @@
 import { StepProps, Steps } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import Welcome from './Welcome';
-import PersonalInfo from './PersonalInfo';
-import IdentityVerfication from './IdentityVerfication';
-import BusinessInformation from './BusinessInformation';
-import AddDirectors from './Director/AddDirectors';
-import AddShareholders from './Shareholder/AddShareholders';
-import AddDocuments from './AddDocuments';
+import Welcome from '../OnBoarding/Welcome';
+import PersonalInfo from '../OnBoarding/PersonalInfo';
+import IdentityVerfication from '../OnBoarding/IdentityVerfication';
+import BusinessInformation from '../OnBoarding/BusinessInformation';
+import AddDocuments from './AddDocument';
 import OnboardingSuccess from '@/components/shared/OnboardingSuccess';
 
 const steps: StepProps[] = [
@@ -21,17 +19,11 @@ const steps: StepProps[] = [
     title: 'Business Information',
   },
   {
-    title: 'Add Directors',
-  },
-  {
-    title: 'Add Shareholders',
-  },
-  {
     title: 'Document Upload',
   },
 ];
 
-const Onboarding = () => {
+const SoleTraderOnboarding = () => {
   const [current, setCurrent] = useState<number>(-1);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -73,21 +65,19 @@ const Onboarding = () => {
       </aside>
       <div
         ref={ref}
-        className="grid h-full place-items-center border border-solid border-grey-200"
+        className="grid h-full place-items-center border border-solid border-grey-200 pb-8"
       >
         {current === -1 && <Welcome next={next} />}
         {current === 0 && <PersonalInfo next={next} />}
         {current === 1 && <IdentityVerfication next={next} />}
         {current === 2 && <BusinessInformation next={next} />}
-        {current === 3 && <AddDirectors next={next} />}
-        {current === 4 && <AddShareholders next={next} />}
-        {current === 5 && <AddDocuments next={next} />}
-        {current === 6 && <OnboardingSuccess />}
+        {current === 3 && <AddDocuments next={next} />}
+        {current === 4 && <OnboardingSuccess />}
       </div>
     </section>
   );
 };
 
-export const Component = Onboarding;
+export const Component = SoleTraderOnboarding;
 
-export default Onboarding;
+export default SoleTraderOnboarding;

@@ -1,8 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ConfigProvider } from 'antd';
+import { pdfjs } from 'react-pdf';
 import './index.css';
 import App from './App.tsx';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -24,6 +31,9 @@ createRoot(document.getElementById('root')!).render(
           },
           DatePicker: {
             controlHeight: 44,
+          },
+          Button: {
+            fontSize: 12,
           },
         },
       }}

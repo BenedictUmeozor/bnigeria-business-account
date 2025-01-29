@@ -26,3 +26,11 @@
 .no-scrollbar {
   scrollbar-width: none; /* Firefox */
 }
+
+.font-cabinet {
+  font-family: 'Cabinet Grotesk', sans-serif;
+}
+
+a {
+  text-decoration: none !important;
+}
