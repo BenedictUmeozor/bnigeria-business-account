@@ -1,14 +1,15 @@
 import { StepProps, Steps } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import Welcome from './Welcome';
-import PersonalInfo from './PersonalInfo';
-import IdentityVerfication from './IdentityVerfication';
-import BusinessInformation from './BusinessInformation';
+import Welcome from '../Welcome';
 import AddDirectors from './Director/AddDirectors';
 import AddShareholders from './Shareholder/AddShareholders';
-import AddDocuments from './AddDocuments';
-import OnboardingSuccess from '@/components/shared/OnboardingSuccess';
+import OnboardingSuccess from '@/pages/OnBoarding/OnboardingSuccess';
+import CorporatePersonalInfo from './CorporatePersonalInfo';
+import CorporateBusinessInfo from './CorporateBusinessInfo';
+import CorporateIdentityVerification from './CorporateIdentityVerification';
+import CorporateDocuments from './CorporateDocuments';
+import CorporateReview from './CorporateReview';
 
 const steps: StepProps[] = [
   {
@@ -31,7 +32,7 @@ const steps: StepProps[] = [
   },
 ];
 
-const Onboarding = () => {
+const CorporateOnboarding = () => {
   const [current, setCurrent] = useState<number>(-1);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -76,18 +77,19 @@ const Onboarding = () => {
         className="grid h-full place-items-center border border-solid border-grey-200"
       >
         {current === -1 && <Welcome next={next} />}
-        {current === 0 && <PersonalInfo next={next} />}
-        {current === 1 && <IdentityVerfication next={next} />}
-        {current === 2 && <BusinessInformation next={next} />}
+        {current === 0 && <CorporatePersonalInfo next={next} />}
+        {current === 1 && <CorporateIdentityVerification next={next} />}
+        {current === 2 && <CorporateBusinessInfo next={next} />}
         {current === 3 && <AddDirectors next={next} />}
         {current === 4 && <AddShareholders next={next} />}
-        {current === 5 && <AddDocuments next={next} />}
-        {current === 6 && <OnboardingSuccess />}
+        {current === 5 && <CorporateDocuments next={next} />}
+        {current === 6 && <CorporateReview nextAction={next} />}
+        {current === 7 && <OnboardingSuccess />}
       </div>
     </section>
   );
 };
 
-export const Component = Onboarding;
+export const Component = CorporateOnboarding;
 
-export default Onboarding;
+export default CorporateOnboarding;

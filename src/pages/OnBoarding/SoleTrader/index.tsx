@@ -1,12 +1,13 @@
 import { StepProps, Steps } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import Welcome from '../OnBoarding/Welcome';
-import PersonalInfo from '../OnBoarding/PersonalInfo';
-import IdentityVerfication from '../OnBoarding/IdentityVerfication';
-import BusinessInformation from '../OnBoarding/BusinessInformation';
-import AddDocuments from './AddDocument';
-import OnboardingSuccess from '@/components/shared/OnboardingSuccess';
+import OnboardingSuccess from '@/pages/OnBoarding/OnboardingSuccess';
+import Welcome from '../Welcome';
+import SoleTraderPersonalInfo from './SoleTraderPersonalInfo';
+import SoleTraderIdentityVerification from './SoleTraderIdentityVerification';
+import SoleTraderBusinessInfo from './SoleTraderBusinessInfo';
+import SoleTraderDocuments from './SoleTraderDocuments';
+import SoleTraderReview from './SoleTraderReview';
 
 const steps: StepProps[] = [
   {
@@ -68,11 +69,12 @@ const SoleTraderOnboarding = () => {
         className="grid h-full place-items-center border border-solid border-grey-200 pb-8"
       >
         {current === -1 && <Welcome next={next} />}
-        {current === 0 && <PersonalInfo next={next} />}
-        {current === 1 && <IdentityVerfication next={next} />}
-        {current === 2 && <BusinessInformation next={next} />}
-        {current === 3 && <AddDocuments next={next} />}
-        {current === 4 && <OnboardingSuccess />}
+        {current === 0 && <SoleTraderPersonalInfo next={next} />}
+        {current === 1 && <SoleTraderIdentityVerification next={next} />}
+        {current === 2 && <SoleTraderBusinessInfo next={next} />}
+        {current === 3 && <SoleTraderDocuments next={next} />}
+        {current === 4 && <SoleTraderReview nextAction={next} />}
+        {current === 5 && <OnboardingSuccess />}
       </div>
     </section>
   );

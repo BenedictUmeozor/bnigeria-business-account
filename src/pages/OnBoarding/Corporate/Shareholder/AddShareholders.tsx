@@ -7,12 +7,10 @@ import EditShareholder from './EditShareholder';
 
 export interface Shareholder {
   id: number;
-  first_name: string;
-  last_name: string;
+  business_name: string;
   email_address: string;
   role: string;
   residential_address: string;
-  state: string;
   owns_over_25_percent: 1 | 0;
   authorized_signatory: 1 | 0;
   preferred_means_of_identification: 'NIN' | 'Passport' | 'Drivers License';

@@ -7,17 +7,17 @@ import {
   Button,
   FormProps,
 } from 'antd';
-import { memo, useState } from 'react';
-import countries from '@/data/countries.json';
-import states from '@/data/states.json';
+import { memo, useCallback } from 'react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import HeaderTitle from '@/components/ui/HeaderTitle';
+import PhoneNumberInput from '@/components/ui/PhoneNumberInput';
+import clsx from 'clsx';
 
 interface FormValues {
   first_name: string;
   last_name: string;
   phone_number: string;
-  dail_code: string;
+  dial_code: string;
   date_of_birth: string;
   town: string;
   state: string;
@@ -25,37 +25,39 @@ interface FormValues {
   postal_code: string;
   occupation: string;
   id_number: string;
-  hold_stake: 1 | 0;
+  is_owner: 1 | 0;
 }
 
-const PersonalInfo = ({ next }: { next: () => void }) => {
+const SoleTraderPersonalInfo = ({
+  next,
+  isReview,
+}: {
+  next: () => void;
+  isReview?: boolean;
+}) => {
   const [form] = Form.useForm<FormValues>();
-  const [phoneNumber, setPhoneNumber] = useState('+234');
-  const [dialCode, setDialCode] = useState('+234');
 
   const onFinish: FormProps<FormValues>['onFinish'] = values => {
     console.log(values);
     next();
   };
 
-  const handleCodeChange = (value: string) => {
-    const newPhoneNumber = phoneNumber.replace(dialCode, value);
-    setDialCode(value);
-    setPhoneNumber(newPhoneNumber);
-    form.setFieldsValue({
-      dail_code: value,
-      phone_number: newPhoneNumber,
-    });
-  };
+  const setFieldsValue = useCallback(
+    ({ dialCode, phoneNumber }: { dialCode: string; phoneNumber: string }) => {
+      form.setFieldsValue({ dial_code: dialCode, phone_number: phoneNumber });
+    },
+    [form],
+  );
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setPhoneNumber(newValue);
-    form.setFieldsValue({ phone_number: newValue });
-  };
+  const setPhoneValue = useCallback(
+    (phoneNumber: string) => {
+      form.setFieldsValue({ phone_number: phoneNumber });
+    },
+    [form],
+  );
 
   return (
-    <div className="h-full w-full space-y-8 p-8">
+    <div className={clsx('h-full w-full space-y-8', !isReview && 'p-8')}>
       <header className="flex items-center justify-between">
         <HeaderTitle
           headerDescription="Let’s know your personal details"
@@ -83,7 +85,7 @@ const PersonalInfo = ({ next }: { next: () => void }) => {
           form={form}
           onFinish={onFinish}
           className="space-y-4"
-          initialValues={{ dail_code: '+234', phone_number: '+234' }}
+          initialValues={{ dial_code: '+234', phone_number: '+234' }}
           labelCol={{ className: 'text-sm text-grey-600 font-medium ' }}
         >
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -95,44 +97,13 @@ const PersonalInfo = ({ next }: { next: () => void }) => {
             </Form.Item>
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <Form.Item label="Phone Number" name="phone_number">
-              <Input
-                className="w-full"
-                placeholder="+234 8000 303 004"
-                type="tel"
-                value={phoneNumber}
-                onChange={handlePhoneChange}
-                addonBefore={
-                  <Form.Item name="dail_code" noStyle>
-                    <Select
-                      showSearch
-                      className="w-20"
-                      dropdownStyle={{ minWidth: '200px' }}
-                      onChange={handleCodeChange}
-                      value={dialCode}
-                      options={countries.map(c => ({
-                        label: (
-                          <div className="flex items-center gap-2">
-                            <img
-                              src={c.flag}
-                              alt={c.countryCode}
-                              className="h-4 w-6 object-cover"
-                            />
-                            <span>{c.countryCode}</span>
-                          </div>
-                        ),
-                        value: c.callingCode,
-                      }))}
-                      filterOption={(input, option) =>
-                        (option?.value as string)
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
-                    />
-                  </Form.Item>
-                }
-              />
-            </Form.Item>
+            <PhoneNumberInput
+              dialCodeName="dial_code"
+              name="phone_number"
+              setFieldsValue={setFieldsValue}
+              setPhoneValue={setPhoneValue}
+              label="Phone Number"
+            />
             <Form.Item label="Date of Birth" name="date_of_birth">
               <DatePicker className="w-full" />
             </Form.Item>
@@ -151,12 +122,7 @@ const PersonalInfo = ({ next }: { next: () => void }) => {
                 className="w-full"
                 placeholder="Select State"
                 showSearch
-                filterOption={(input, option) =>
-                  (option?.value as string)
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={states.map(s => ({ label: s.name, value: s.name }))}
+                options={[]}
               />
             </Form.Item>
             <Form.Item label="Postal Code" name="postal_code">
@@ -176,8 +142,8 @@ const PersonalInfo = ({ next }: { next: () => void }) => {
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Form.Item
-              label="Do you hold over 25% stake of the business?"
-              name="hold_stake"
+              label="Are you one of the owners of this business?"
+              name="is_owner"
             >
               <Radio.Group className="w-full">
                 <div className="grid grid-cols-2 gap-2">
@@ -202,10 +168,10 @@ const PersonalInfo = ({ next }: { next: () => void }) => {
               htmlType="submit"
               type="primary"
               size="large"
-              className="text-base"
+              className="w-48 text-base"
               shape="round"
             >
-              Save & Continue
+              {isReview ? 'Confirm' : 'Save & Continue'}
             </Button>
           </div>
         </Form>
@@ -213,4 +179,4 @@ const PersonalInfo = ({ next }: { next: () => void }) => {
     </div>
   );
 };
-export default memo(PersonalInfo);
+export default memo(SoleTraderPersonalInfo);

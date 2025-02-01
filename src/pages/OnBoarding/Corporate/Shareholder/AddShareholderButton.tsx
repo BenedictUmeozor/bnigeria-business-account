@@ -32,7 +32,7 @@ const AddShareholderButton = ({
             />
           </div>
           <div className="space-y-0.5">
-            <p className="break-words font-medium text-grey-600">{`${shareholders[index].first_name} ${shareholders[index].last_name}`}</p>
+            <p className="break-words font-medium text-grey-600">{`${shareholders[index].business_name}`}</p>
             <p className="break-words text-gray-600">
               {shareholders[index].email_address}
             </p>

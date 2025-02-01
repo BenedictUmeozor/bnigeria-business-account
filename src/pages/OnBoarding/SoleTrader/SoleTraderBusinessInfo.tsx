@@ -1,8 +1,9 @@
-import { PencilIcon } from '@heroicons/react/24/outline';
-import { Button, DatePicker, Form, FormProps, Input, Select } from 'antd';
-import { memo, useState } from 'react';
-import countries from '@/data/countries.json';
-import HeaderTitle from '@/components/ui/HeaderTitle';
+import { PencilIcon } from "@heroicons/react/24/outline";
+import { Button, DatePicker, Form, FormProps, Input, Select } from "antd";
+import { memo, useCallback } from "react";
+import HeaderTitle from "@/components/ui/HeaderTitle";
+import PhoneNumberInput from "@/components/ui/PhoneNumberInput";
+import clsx from "clsx";
 
 interface FormValues {
   business_name: string;
@@ -18,34 +19,36 @@ interface FormValues {
   dial_code: string;
 }
 
-const BusinessInformation = ({ next }: { next: () => void }) => {
+const SoleTraderBusinessInfo = ({
+  next,
+  isReview,
+}: {
+  next: () => void;
+  isReview?: boolean;
+}) => {
   const [form] = Form.useForm<FormValues>();
-  const [phoneNumber, setPhoneNumber] = useState('+234');
-  const [dialCode, setDialCode] = useState('+234');
 
-  const onFinish: FormProps<FormValues>['onFinish'] = values => {
+  const onFinish: FormProps<FormValues>["onFinish"] = values => {
     console.log(values);
     next();
   };
 
-  const handleCodeChange = (value: string) => {
-    const newPhoneNumber = phoneNumber.replace(dialCode, value);
-    setDialCode(value);
-    setPhoneNumber(newPhoneNumber);
-    form.setFieldsValue({
-      dial_code: value,
-      phone_number: newPhoneNumber,
-    });
-  };
+  const setFieldsValue = useCallback(
+    ({ dialCode, phoneNumber }: { dialCode: string; phoneNumber: string }) => {
+      form.setFieldsValue({ dial_code: dialCode, phone_number: phoneNumber });
+    },
+    [form]
+  );
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setPhoneNumber(newValue);
-    form.setFieldsValue({ phone_number: newValue });
-  };
+  const setPhoneValue = useCallback(
+    (phoneNumber: string) => {
+      form.setFieldsValue({ phone_number: phoneNumber });
+    },
+    [form]
+  );
 
   return (
-    <div className="h-full w-full space-y-8 p-8">
+    <div className={clsx("h-full w-full space-y-8", !isReview && "p-8")}>
       <header className="flex items-center justify-between">
         <HeaderTitle
           headerDescription="Tell us more about your business"
@@ -73,8 +76,8 @@ const BusinessInformation = ({ next }: { next: () => void }) => {
           form={form}
           onFinish={onFinish}
           className="space-y-4"
-          initialValues={{ dial_code: dialCode, phone_number: phoneNumber }}
-          labelCol={{ className: 'text-sm text-grey-600 font-medium ' }}
+          initialValues={{ dial_code: "+234", phone_number: "+234" }}
+          labelCol={{ className: "text-sm text-grey-600 font-medium " }}
         >
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Form.Item label="Business Name" name="business_name">
@@ -118,8 +121,8 @@ const BusinessInformation = ({ next }: { next: () => void }) => {
               <Select
                 className="w-full"
                 placeholder="Enter Business Sector"
-                options={['IT/Technology', 'Finance/Accounting', 'Other'].map(
-                  v => ({ label: v, value: v }),
+                options={["IT/Technology", "Finance/Accounting", "Other"].map(
+                  v => ({ label: v, value: v })
                 )}
               />
             </Form.Item>
@@ -152,44 +155,13 @@ const BusinessInformation = ({ next }: { next: () => void }) => {
                 placeholder="https://www.xyz.com"
               />
             </Form.Item>
-            <Form.Item label="Phone Number" name="phone_number">
-              <Input
-                className="w-full"
-                placeholder="+234 8000 303 004"
-                type="tel"
-                value={phoneNumber}
-                onChange={handlePhoneChange}
-                addonBefore={
-                  <Form.Item name="dial_code" noStyle>
-                    <Select
-                      showSearch
-                      className="w-20"
-                      dropdownStyle={{ minWidth: '200px' }}
-                      onChange={handleCodeChange}
-                      value={dialCode}
-                      options={countries.map(c => ({
-                        label: (
-                          <div className="flex items-center gap-2">
-                            <img
-                              src={c.flag}
-                              alt={c.countryCode}
-                              className="h-4 w-6 object-cover"
-                            />
-                            <span>{c.countryCode}</span>
-                          </div>
-                        ),
-                        value: c.callingCode,
-                      }))}
-                      filterOption={(input, option) =>
-                        (option?.value as string)
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
-                    />
-                  </Form.Item>
-                }
-              />
-            </Form.Item>
+            <PhoneNumberInput
+              dialCodeName="dial_code"
+              name="phone_number"
+              setFieldsValue={setFieldsValue}
+              setPhoneValue={setPhoneValue}
+              label="Phone Number"
+            />
           </div>
           <Button
             htmlType="submit"
@@ -198,11 +170,11 @@ const BusinessInformation = ({ next }: { next: () => void }) => {
             shape="round"
             className="w-48 text-base"
           >
-            Next
+            {isReview ? "Confirm" : "Next"}
           </Button>
         </Form>
       </section>
     </div>
   );
 };
-export default memo(BusinessInformation);
+export default memo(SoleTraderBusinessInfo);
