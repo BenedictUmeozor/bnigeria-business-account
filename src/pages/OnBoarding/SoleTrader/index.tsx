@@ -1,4 +1,4 @@
-import { StepProps, Steps } from 'antd';
+import { StepProps, Steps, Tag } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import OnboardingSuccess from '@/pages/OnBoarding/OnboardingSuccess';
@@ -40,13 +40,16 @@ const SoleTraderOnboarding = () => {
   }, [current]);
 
   return (
-    <section className="no-scrollbar grid grid-cols-[300px_1fr] overflow-hidden rounded-xl">
+    <section className="no-scrollbar grid grid-cols-[312px_1fr] overflow-hidden rounded-xl">
       <aside className="grid h-full max-w-[600px] grid-rows-[1fr_auto] gap-12 border border-r-0 border-solid border-grey-200 bg-primary-50 pb-8 pt-12">
         <section>
-          <div className="bg-primary-100 px-4 py-3 text-lg">
+        <div className="bg-primary-100 px-4 py-3 text-lg flex items-center space-x-2">
             <h2 className="text-center text-lg font-medium">
-              Business Account onboarding
+              Get Business Account
             </h2>
+            <Tag color="#ebf4ff" className="rounded-2xl text-primary-600 text-xs">
+              Sole Trader
+            </Tag>
           </div>
           <div className="mx-auto my-8 flex w-[80%] items-center justify-center">
             <Steps
