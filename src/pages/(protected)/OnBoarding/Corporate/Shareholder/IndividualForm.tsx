@@ -1,7 +1,6 @@
 import Upload from "@/components/ui/Upload";
 import { Button, Divider, Form, FormProps, Input, Radio, Select } from "antd";
 import { useState } from "react";
-import { Shareholder } from "./AddShareholders";
 
 interface FormValues {
   first_name: string;
@@ -18,7 +17,7 @@ interface FormValues {
 const IndividualForm = ({
   handleAddShareholder,
 }: {
-  handleAddShareholder: (shareholder: Shareholder) => void;
+  handleAddShareholder: (shareholder: HM.Shareholder) => void;
 }) => {
   const [form] = Form.useForm<FormValues>();
   const [frontImage, setFrontImage] = useState<File | null>(null);
@@ -29,7 +28,7 @@ const IndividualForm = ({
       ...values,
       front_image: frontImage,
       back_image: backImage,
-    } as unknown as Shareholder;
+    } as unknown as HM.Shareholder;
     handleAddShareholder(obj);
   };
 

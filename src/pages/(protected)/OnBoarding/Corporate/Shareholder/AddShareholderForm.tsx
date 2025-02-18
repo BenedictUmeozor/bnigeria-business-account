@@ -1,6 +1,5 @@
 import HeaderTitle from "@/components/ui/HeaderTitle";
 import { Segmented } from "antd";
-import { Shareholder } from "./AddShareholders";
 import { useEffect, useRef, useState } from "react";
 import IndividualForm from "./IndividualForm";
 import BusinessForm from "./BusinessForm";
@@ -8,7 +7,7 @@ import BusinessForm from "./BusinessForm";
 const AddShareholderForm = ({
   handleAddShareholder,
 }: {
-  handleAddShareholder: (shareholder: Shareholder) => void;
+  handleAddShareholder: (shareholder: HM.Shareholder) => void;
 }) => {
   const [segment, setSegment] = useState<"Individual" | "Business">(
     "Individual"

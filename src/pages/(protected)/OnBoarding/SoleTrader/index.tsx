@@ -1,15 +1,15 @@
 import { StepProps, Steps, Tag } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import Welcome from '../Welcome';
-import AddDirectors from './Director/AddDirectors';
-import AddShareholders from './Shareholder/AddShareholders';
-import OnboardingSuccess from '@/pages/OnBoarding/OnboardingSuccess';
-import CorporatePersonalInfo from './CorporatePersonalInfo';
-import CorporateBusinessInfo from './CorporateBusinessInfo';
-import CorporateIdentityVerification from './CorporateIdentityVerification';
-import CorporateDocuments from './CorporateDocuments';
-import CorporateReview from './CorporateReview';
+import SoleTraderPersonalInfo from './SoleTraderPersonalInfo';
+import SoleTraderIdentityVerification from './SoleTraderIdentityVerification';
+import SoleTraderBusinessInfo from './SoleTraderBusinessInfo';
+import SoleTraderDocuments from './SoleTraderDocuments';
+import SoleTraderReview from './SoleTraderReview';
+import { useSoleTraderOnboardingContext } from '@/contexts/sole-trader-onboarding-context';
+import SoleOnboardingProvider from '@/providers/SoleTraderOnboardingProvider';
+import OnboardingSuccess from '../OnboardingSuccess';
 
 const steps: StepProps[] = [
   {
@@ -22,23 +22,17 @@ const steps: StepProps[] = [
     title: 'Business Information',
   },
   {
-    title: 'Add Directors',
-  },
-  {
-    title: 'Add Shareholders',
-  },
-  {
     title: 'Document Upload',
   },
 ];
 
-const CorporateOnboarding = () => {
-  const [current, setCurrent] = useState<number>(-1);
+const SoleTraderOnboarding = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { current, setCurrent } = useSoleTraderOnboardingContext();
 
   const next = useCallback(() => {
-    setCurrent(prev => (prev === -1 ? 0 : prev + 1));
-  }, []);
+    setCurrent(current + 1);
+  }, [current, setCurrent]);
 
   useEffect(() => {
     ref.current?.scrollIntoView({
@@ -55,8 +49,11 @@ const CorporateOnboarding = () => {
             <h2 className="text-center text-lg font-medium">
               Get Business Account
             </h2>
-            <Tag color="#ebf4ff" className="rounded-2xl text-primary-600">
-              Corporate
+            <Tag
+              color="#ebf4ff"
+              className="rounded-2xl text-xs text-primary-600"
+            >
+              Sole Trader
             </Tag>
           </div>
           <div className="mx-auto my-8 flex w-[80%] items-center justify-center">
@@ -77,22 +74,28 @@ const CorporateOnboarding = () => {
       </aside>
       <div
         ref={ref}
-        className="grid h-full place-items-center border border-solid border-grey-200"
+        className="grid h-full place-items-center border border-solid border-grey-200 pb-8"
       >
         {current === -1 && <Welcome next={next} />}
-        {current === 0 && <CorporatePersonalInfo next={next} />}
-        {current === 1 && <CorporateIdentityVerification next={next} />}
-        {current === 2 && <CorporateBusinessInfo next={next} />}
-        {current === 3 && <AddDirectors next={next} />}
-        {current === 4 && <AddShareholders next={next} />}
-        {current === 5 && <CorporateDocuments next={next} />}
-        {current === 6 && <CorporateReview nextAction={next} />}
-        {current === 7 && <OnboardingSuccess />}
+        {current === 0 && <SoleTraderPersonalInfo next={next} />}
+        {current === 1 && <SoleTraderIdentityVerification next={next} />}
+        {current === 2 && <SoleTraderBusinessInfo next={next} />}
+        {current === 3 && <SoleTraderDocuments next={next} />}
+        {current === 4 && <SoleTraderReview nextAction={next} />}
+        {current === 5 && <OnboardingSuccess />}
       </div>
     </section>
   );
 };
 
-export const Component = CorporateOnboarding;
+const SoleTraderWrapper = () => {
+  return (
+    <SoleOnboardingProvider>
+      <SoleTraderOnboarding />
+    </SoleOnboardingProvider>
+  );
+};
 
-export default CorporateOnboarding;
+export const Component = SoleTraderWrapper;
+
+export default SoleTraderWrapper;

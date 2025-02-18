@@ -2,22 +2,10 @@ import HeaderTitle from "@/components/ui/HeaderTitle";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import AddShareholderButton from "./AddShareholderButton";
 import AddShareholderForm from "./AddShareholderForm";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import EditShareholder from "./EditShareholder";
 import clsx from "clsx";
-
-export interface Shareholder {
-  id: number;
-  business_name: string;
-  email_address: string;
-  role: string;
-  residential_address: string;
-  owns_over_25_percent: 1 | 0;
-  authorized_signatory: 1 | 0;
-  preferred_means_of_identification: "NIN" | "Passport" | "Drivers License";
-  front_image: File | null;
-  back_image: File | null;
-}
+import { useCorporateOnboardingContext } from "@/contexts/corporate-onboarding";
 
 const AddShareholders = ({
   next,
@@ -28,24 +16,33 @@ const AddShareholders = ({
 }) => {
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [shareholders, setShareholders] = useState<Shareholder[]>([]);
   const [selectedShareholder, setSelectedShareholder] =
-    useState<Shareholder | null>(null);
+    useState<HM.Shareholder | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
-  const _setShowForm = useCallback(() => setShowForm(true), []);
+  const { shareholders, setShareholders, stakePercentage } =
+    useCorporateOnboardingContext();
+
+  const _setShowForm = useCallback(() => {
+    if (stakePercentage === 100) {
+      message.error("You already have 100% stake in the business");
+      return;
+    }
+    setShowForm(true);
+  }, [stakePercentage]);
+  
   const hanldeAddShareholder = useCallback(
-    (shareholder: Shareholder) => {
+    (shareholder: HM.Shareholder) => {
       const length = shareholders.length;
       setShareholders([...shareholders, { ...shareholder, id: length + 1 }]);
       setShowForm(false);
       console.log(shareholders);
     },
-    [shareholders]
+    [shareholders, setShareholders]
   );
 
   const handleEditShareholder = useCallback(
-    (shareholder: Shareholder) => {
+    (shareholder: HM.Shareholder) => {
       const newShareholders = shareholders.map(d => {
         if (d.id === shareholder.id) {
           return shareholder;
@@ -57,10 +54,10 @@ const AddShareholders = ({
       setShowEditForm(false);
       setSelectedShareholder(null);
     },
-    [shareholders]
+    [shareholders, setShareholders]
   );
 
-  const _setSelectedShareholder = useCallback((shareholder: Shareholder) => {
+  const _setSelectedShareholder = useCallback((shareholder: HM.Shareholder) => {
     setSelectedShareholder(shareholder);
     setShowEditForm(true);
   }, []);

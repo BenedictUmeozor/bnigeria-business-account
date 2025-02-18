@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Shareholder } from './AddShareholders';
 import {
   Form,
   Input,
@@ -16,21 +15,20 @@ const EditShareholder = ({
   shareholder,
   handleEditShareholder,
 }: {
-  shareholder: Shareholder;
-  handleEditShareholder: (shareholder: Shareholder) => void;
+  shareholder: HM.Shareholder;
+  handleEditShareholder: (shareholder: HM.Shareholder) => void;
 }) => {
-  const [form] = Form.useForm<Shareholder>();
+  const [form] = Form.useForm<HM.Shareholder>();
   const [segment, setSegment] = useState<'Individual' | 'Business'>(
-    shareholder.type,
+    'Individual',
   );
   const ref = useRef<HTMLDivElement>(null);
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
 
-  const onFinish: FormProps<Shareholder>['onFinish'] = values => {
-    const obj: Shareholder = {
+  const onFinish: FormProps<HM.Shareholder>['onFinish'] = values => {
+    const obj: HM.Shareholder = {
       ...values,
-      type: segment,
       front_image: frontImage,
       back_image: backImage,
       id: shareholder.id,
@@ -56,27 +54,27 @@ const EditShareholder = ({
           className="w-full rounded-lg border border-solid border-grey-200 bg-white p-1 [&_.ant-segmented-item-selected]:bg-primary-50 [&_.ant-segmented-item-selected]:text-primary [&_.ant-segmented-item:hover]:bg-primary-50 [&_.ant-segmented-item:hover]:text-primary [&_.ant-segmented-item]:grid [&_.ant-segmented-item]:h-10 [&_.ant-segmented-item]:place-items-center [&_.ant-segmented-item]:text-primary"
           block
         />
-         <Form
+        <Form
           layout="vertical"
           autoComplete="off"
           form={form}
           onFinish={onFinish}
           className="space-y-4"
-          initialValues={{...shareholder}}
-          labelCol={{ className: "text-sm text-grey-500 font-medium " }}
+          initialValues={{ ...shareholder }}
+          labelCol={{ className: 'text-sm text-grey-500 font-medium ' }}
         >
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Form.Item
               label="Business Name"
               name="business_name"
-              rules={[{ required: true, message: "This field is required" }]}
+              rules={[{ required: true, message: 'This field is required' }]}
             >
               <Input className="w-full" placeholder="e.g John" />
             </Form.Item>
             <Form.Item
               label="Email Address"
               name="email_address"
-              rules={[{ required: true, message: "This field is required" }]}
+              rules={[{ required: true, message: 'This field is required' }]}
             >
               <Input
                 className="w-full"
@@ -89,7 +87,7 @@ const EditShareholder = ({
             <Form.Item
               label="Residential Address"
               name="residential_address"
-              rules={[{ required: true, message: "This field is required" }]}
+              rules={[{ required: true, message: 'This field is required' }]}
             >
               <Input className="w-full" placeholder="e.g john@example.com" />
             </Form.Item>
@@ -151,19 +149,19 @@ const EditShareholder = ({
             <Radio.Group className="w-full">
               <div className="grid grid-cols-3 gap-2">
                 <Radio
-                  value={"NIN"}
+                  value={'NIN'}
                   className="flex items-center justify-between rounded-lg border border-solid border-grey-200 bg-grey-50 p-2"
                 >
                   NIN
                 </Radio>
                 <Radio
-                  value={"Passport"}
+                  value={'Passport'}
                   className="flex items-center justify-between rounded-lg border border-solid border-grey-200 bg-grey-50 p-2"
                 >
                   Passport
                 </Radio>
                 <Radio
-                  value={"Drivers License"}
+                  value={'Drivers License'}
                   className="flex items-center justify-between rounded-lg border border-solid border-grey-200 bg-grey-50 p-2"
                 >
                   Drivers License
