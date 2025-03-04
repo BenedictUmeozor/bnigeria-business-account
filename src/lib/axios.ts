@@ -3,10 +3,6 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: ENDPOINTS.APP_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  validateStatus: status => status < 500,
 });
 
 api.interceptors.request.use(
